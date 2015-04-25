@@ -3,10 +3,10 @@
 
 ## This function creates a special "matrix" object that can cache its inverse.
 ## It creates a list containing a function to:
-## 1) set the value of the matrix
-## 2) get the value of the matrix
-## 3) set the value of the inverse matrix
-## 4) get the value of the inverse matrix
+## - set the value of the matrix
+## - get the value of the matrix
+## - set the value of the inverse matrix 'm_inv'
+## - get the value of the inverse matrix 'm_inv'
 
 makeCacheMatrix <- function(x = matrix()) {
         m_inv <- NULL
@@ -19,7 +19,7 @@ makeCacheMatrix <- function(x = matrix()) {
                         m_inv <<- NULL
                 }
                 get <- function() x
-                setinv <- function(matinv) m_inv <<- matinv
+                setinv <- function(solve) m_inv <<- solve
                 getinv <- function() m_inv
                 list(set = set, get = get,
                      setinv = setinv, getinv = getinv)
@@ -31,7 +31,7 @@ makeCacheMatrix <- function(x = matrix()) {
 ## the function makeCacheMatrix. If the inverse has already been calculated
 ## and the matrix has not changed, it gets the inverse from the cache and 
 ## skips the computation. Otherwise, it calculates the inverse of the matrix
-## and sets its value in the cache using the setinv function.
+## and sets its value in the cache using the 'setinv' function.
 
 cacheSolve <- function(x, ...) {        
         m_inv <- x$getinv()
@@ -43,9 +43,10 @@ cacheSolve <- function(x, ...) {
         ## This if/else structure controls that the matrix is invertible,
         ## that is, its determinant is not equal to zero (nonsingular matrix).
         if(det(data) != 0) {
-                ## Return a matrix 'm_inv' that is the inverse of 'x'
+                ## Return a matrix 'm_inv' that is the inverse of 'x'.
                 m_inv <- solve(data, ...)
                 x$setinv(m_inv)
+                ## Round the values of the matrix to 6 significant digits.
                 round(m_inv, digits = 6)
         } else {
                 print("The determinant is equal to zero. Matrix not invertible")
